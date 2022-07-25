@@ -41,6 +41,7 @@ function alternate(s) {
 function abbreviation(a, b) {
   let hasLetter = false;
   let position = 0;
+  let checked;
   const uniqueLettersA = Array.from(new Set(a)).join("");
   const uniqueLettersB = Array.from(new Set(b)).join("");
   const lettersA = [...a];
@@ -68,12 +69,28 @@ function abbreviation(a, b) {
   }
 
   for (let i = 0; i < lettersB.length; i++) {
+    checked = false;
     while (position < lettersA.length) {
-      if (lettersA[position].toUpperCase() === lettersB[i]) {
+      checked = true;
+      if (lettersA[position] === lettersB[i]) {
         position++;
         break;
-      } else if (lettersA[position] !== lettersB[i]) {
-        if (lettersA[position] !== lettersA[position].toUpperCase()) {
+      } else {
+        if (lettersA[position].toUpperCase() === lettersB[i]) {
+          const upperCaseInA = lettersA.filter(
+            (letter) => letter === lettersA[position].toUpperCase()
+          );
+          const upperCaseInB = lettersB.filter(
+            (letter) => letter === lettersA[position].toUpperCase()
+          );
+
+          if (upperCaseInB.length > upperCaseInA.length) {
+            position++;
+            break;
+          } else {
+            position++;
+          }
+        } else if (lettersA[position] !== lettersA[position].toUpperCase()) {
           position++;
         } else {
           console.log("NO");
@@ -83,6 +100,16 @@ function abbreviation(a, b) {
     }
   }
 
-  console.log("YES");
-  return "YES";
+  if (
+    lettersA
+      .slice(position)
+      .some((letter) => letter === letter.toUpperCase()) ||
+    !checked
+  ) {
+    console.log("NO");
+    return "NO";
+  } else {
+    console.log("YES");
+    return "YES";
+  }
 }
